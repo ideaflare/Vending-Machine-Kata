@@ -15,14 +15,14 @@ type VendingMachineTests() =
         vm <- new VendingMachine()
 
     [<TestMethod>]
-    member this.``Only Valid Coins are accepted``()=
+    member this.``Coins accepted only if valid``()=
         Assert.IsFalse(vm.Insert Penny)
         Assert.IsTrue(vm.Insert Dime)
         Assert.IsTrue(vm.Insert Nickel)
         Assert.IsTrue(vm.Insert Quarter)
 
     [<TestMethod>]
-    member this.``Accepted coins updates display``()=
+    member this.``Coins accepted updates display``()=
         Assert.AreEqual("INSERT COIN", vm.Display)
         insert Dime
         Assert.AreEqual("5", vm.Display)
@@ -32,7 +32,7 @@ type VendingMachineTests() =
         Assert.AreEqual("40", vm.Display)
 
     [<TestMethod>]
-    member this.``Rejected coins are returned``()=
+    member this.``Coins rejected are returned``()=
         insert Penny
         insert Penny
         let returnedCoins = vm.TakeCoinReturn
