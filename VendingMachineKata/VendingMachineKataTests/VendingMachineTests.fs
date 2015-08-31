@@ -30,3 +30,10 @@ type VendingMachineTests() =
         vm.Insert Quarter |> ignore
         Assert.AreEqual("40", vm.Display)
 
+    [<TestMethod>]
+    member this.``Rejected coins are returned``()=
+        vm.Insert(Penny) |> ignore
+        vm.Insert(Penny) |> ignore
+        let returnedCoins = vm.TakeCoinReturn
+        Assert.AreEqual([Penny;Penny;], returnedCoins)
+

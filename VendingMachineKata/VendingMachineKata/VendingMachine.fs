@@ -5,6 +5,7 @@ type Coin = Penny | Dime | Nickel | Quarter
 type VendingMachine() = 
     
     let mutable credit = 0
+    let mutable returnedCoins = []
 
     let coinValue coin = 
         match coin with
@@ -15,7 +16,9 @@ type VendingMachine() =
 
     member this.Insert coin =
         match coin with
-        | Penny -> false
+        | Penny -> 
+            returnedCoins <- coin :: returnedCoins
+            false
         | _ -> 
             credit <- credit + (coinValue coin)
             true
@@ -24,3 +27,9 @@ type VendingMachine() =
         with get() =
             if credit > 0 then (string credit)
             else "INSERT COIN"
+
+    member this.TakeCoinReturn
+        with get() =
+            let change = returnedCoins
+            returnedCoins <- []
+            change
