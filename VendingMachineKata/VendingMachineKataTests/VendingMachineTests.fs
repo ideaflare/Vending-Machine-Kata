@@ -1,5 +1,6 @@
 ﻿namespace VendingMachineKataTests
 open Microsoft.VisualStudio.TestTools.UnitTesting
+open VendingMachineKata.ObjectTypes
 open VendingMachineKata
 
 [<TestClass>]

@@ -1,7 +1,8 @@
 ﻿namespace VendingMachineKata
 
-type Coin = Penny | Dime | Nickel | Quarter
-type Product = Cola | Chips | Candy
+open ObjectTypes
+open MoneyConversion
+
 type State = Initial | Credit | Thanks
 
 type VendingMachine() = 
@@ -9,19 +10,6 @@ type VendingMachine() =
     let mutable state = Initial
     let mutable credit = 0
     let mutable returnedCoins = []
-
-    let coinValue coin = 
-        match coin with
-        | Penny -> 1
-        | Dime -> 5
-        | Nickel -> 10
-        | Quarter -> 25
-
-    let productValue product =
-        match product with
-        | Cola -> 100
-        | Chips -> 50
-        | Candy -> 65
 
     member this.Insert coin =
         match coin with
@@ -54,8 +42,3 @@ type VendingMachine() =
             let change = returnedCoins
             returnedCoins <- []
             change
-
-    
-                    
-
-//    cola for $1.00, chips for $0.50, and candy for $0.65
