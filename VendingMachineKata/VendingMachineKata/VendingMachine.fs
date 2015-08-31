@@ -3,15 +3,21 @@
 open ObjectTypes
 open MoneyConversion
 
-type State = Initial | Credit | Thanks | MoreCoins | Price
+type State = Initial | Credit | Thanks | MoreCoins | Price | SoldOut
 
-type VendingMachine() = 
+type VendingMachine(colas, chips, candies) = 
     
     let mutable state = Initial
     let mutable credit = 0
     let mutable insertedCoins = []
     let mutable returnedCoins = []
     let mutable priceDisplay = ""
+
+    let stock = 
+        let inventory = [Cola, colas; Chips, chips; Candy, candies]
+        System.Linq.Enumerable.ToDictionary(inventory, fst, snd)
+
+    new() = VendingMachine(10,10,10)
 
     member this.Insert coin =
         match coin with
@@ -25,17 +31,22 @@ type VendingMachine() =
             true
             
     member this.Purchase product =
-        let price = productValue product
-        if credit >= price
-            then
-                state <- Thanks
-                returnedCoins <- returnedCoins @ getCoins (credit - price)
-                credit <- 0
-                Some(product)
-            else 
-                state <- Price
-                priceDisplay <- sprintf "PRICE $%d.%02d" (price / 100) (price % 100)
+        if stock.[product] < 1 
+            then 
+                state <- SoldOut
                 None
+        else
+            let price = productValue product
+            if credit >= price
+                then
+                    state <- Thanks
+                    returnedCoins <- returnedCoins @ getCoins (credit - price)
+                    credit <- 0
+                    Some(product)
+                else 
+                    state <- Price
+                    priceDisplay <- sprintf "PRICE $%d.%02d" (price / 100) (price % 100)
+                    None
 
     member this.Display
         with get() =
@@ -51,6 +62,11 @@ type VendingMachine() =
                     then state <- Credit
                     else state <- MoreCoins
                 priceDisplay
+            | SoldOut ->
+                if credit > 0
+                    then state <- Credit
+                    else state <- Initial
+                "SOLD OUT"
 
     member this.TakeCoinReturn
         with get() =

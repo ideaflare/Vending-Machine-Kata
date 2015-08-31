@@ -84,6 +84,18 @@ type VendingMachineTests() =
         Assert.AreEqual("INSERT COIN", vm.Display)
         insert Dime
         Assert.AreEqual("5", vm.Display)
+
+    [<TestMethod>]
+    member this.``Sold out stock notifies customer``()=
+        vm <- new VendingMachine(colas=0,chips=0,candies=0)
+        let product = vm.Purchase(Cola)
+        Assert.AreEqual("SOLD OUT", vm.Display)
+        Assert.AreEqual("INSERT COIN", vm.Display)
+        insert Nickel
+        let product = vm.Purchase(Cola)
+        Assert.AreEqual("SOLD OUT", vm.Display)
+        Assert.AreEqual("10", vm.Display)
+
        
 
 
