@@ -27,6 +27,7 @@ type VendingMachine() =
         if credit >= price
             then
                 state <- Thanks
+                returnedCoins <- returnedCoins @ getCoins (credit - price)
                 credit <- 0
                 Some(product)
             else 

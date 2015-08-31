@@ -62,6 +62,16 @@ type VendingMachineTests() =
         let product = vm.Purchase(Candy)
         Assert.AreEqual("PRICE $0.65", vm.Display);
         Assert.AreEqual("10", vm.Display);
+
+    [<TestMethod>]
+    member this.``Change after purchase is returned``()=
+        insert Quarter
+        insert Quarter
+        insert Nickel
+        insert Dime
+        let product = vm.Purchase(Chips)
+        let change = vm.TakeCoinReturn
+        Assert.AreEqual([Nickel;Dime;], change);
        
 
 
