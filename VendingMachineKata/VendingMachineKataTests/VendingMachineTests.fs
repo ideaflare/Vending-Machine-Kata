@@ -46,4 +46,11 @@ type VendingMachineTests() =
         Assert.AreEqual(Some(Chips), product)
         Assert.AreEqual("THANK YOU", vm.Display)
 
+    [<TestMethod>]
+    member this.``Purchase resets credit``()=
+        this.``Purchase thanks customer``()
+        Assert.AreEqual("INSERT COINS", vm.Display)
+        insert Dime
+        Assert.AreEqual("5", vm.Display)
+
 

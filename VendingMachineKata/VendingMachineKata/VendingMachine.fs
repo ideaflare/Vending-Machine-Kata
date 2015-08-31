@@ -3,7 +3,7 @@
 open ObjectTypes
 open MoneyConversion
 
-type State = Initial | Credit | Thanks
+type State = Initial | Credit | Thanks | MoreCoins
 
 type VendingMachine() = 
     
@@ -25,6 +25,7 @@ type VendingMachine() =
         if credit >= (productValue product)
             then
                 state <- Thanks
+                credit <- 0
                 Some(product)
             else 
                 state <- Initial
@@ -34,8 +35,12 @@ type VendingMachine() =
         with get() =
             match state with
             | Initial -> "INSERT COIN"
+            | MoreCoins -> "INSERT COINS"
             | Credit -> string credit
-            | Thanks -> "THANK YOU"
+            | Thanks -> 
+                state <- MoreCoins
+                "THANK YOU"
+            
 
     member this.TakeCoinReturn
         with get() =
