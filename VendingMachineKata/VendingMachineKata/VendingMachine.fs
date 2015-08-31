@@ -9,6 +9,7 @@ type VendingMachine() =
     
     let mutable state = Initial
     let mutable credit = 0
+    let mutable insertedCoins = []
     let mutable returnedCoins = []
     let mutable priceDisplay = ""
 
@@ -18,6 +19,7 @@ type VendingMachine() =
             returnedCoins <- coin :: returnedCoins
             false
         | _ -> 
+            insertedCoins <- coin :: insertedCoins
             credit <- credit + (coinValue coin)
             state <- Credit
             true
@@ -55,3 +57,9 @@ type VendingMachine() =
             let change = returnedCoins
             returnedCoins <- []
             change
+
+    member this.ReturnCoins =
+            returnedCoins <- returnedCoins @ insertedCoins
+            insertedCoins <- []
+            credit <- 0
+            state <- Initial

@@ -72,6 +72,18 @@ type VendingMachineTests() =
         let product = vm.Purchase(Chips)
         let change = vm.TakeCoinReturn
         Assert.AreEqual([Nickel;Dime;], change);
+
+    [<TestMethod>]
+    member this.``ReturnCoins returns inserted coins``()=
+        insert Dime
+        insert Quarter
+        insert Quarter
+        vm.ReturnCoins
+        let returnedCoins = vm.TakeCoinReturn
+        Assert.AreEqual([Quarter;Quarter;Dime], returnedCoins)
+        Assert.AreEqual("INSERT COIN", vm.Display)
+        insert Dime
+        Assert.AreEqual("5", vm.Display)
        
 
 
