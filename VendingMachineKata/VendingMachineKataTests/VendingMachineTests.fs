@@ -11,3 +11,8 @@ type VendingMachineTests() =
         Assert.IsTrue(vm.Insert Dime)
         Assert.IsTrue(vm.Insert Nickel)
         Assert.IsTrue(vm.Insert Quarter)
+
+    [<TestMethod>]
+    member this.``Pennies are rejected``()=
+        let vm = new VendingMachine()
+        Assert.IsFalse(vm.Insert Penny)
