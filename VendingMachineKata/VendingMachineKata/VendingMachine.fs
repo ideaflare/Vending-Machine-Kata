@@ -3,13 +3,14 @@
 open ObjectTypes
 open MoneyConversion
 
-type State = Initial | Credit | Thanks | MoreCoins
+type State = Initial | Credit | Thanks | MoreCoins | Price
 
 type VendingMachine() = 
     
     let mutable state = Initial
     let mutable credit = 0
     let mutable returnedCoins = []
+    let mutable priceDisplay = ""
 
     member this.Insert coin =
         match coin with
@@ -22,13 +23,15 @@ type VendingMachine() =
             true
             
     member this.Purchase product =
-        if credit >= (productValue product)
+        let price = productValue product
+        if credit >= price
             then
                 state <- Thanks
                 credit <- 0
                 Some(product)
             else 
-                state <- Initial
+                state <- Price
+                priceDisplay <- sprintf "PRICE $%d.%02d" (price / 100) (price % 100)
                 None
 
     member this.Display
@@ -40,7 +43,11 @@ type VendingMachine() =
             | Thanks -> 
                 state <- MoreCoins
                 "THANK YOU"
-            
+            | Price ->
+                if credit > 0
+                    then state <- Credit
+                    else state <- MoreCoins
+                priceDisplay
 
     member this.TakeCoinReturn
         with get() =

@@ -53,4 +53,16 @@ type VendingMachineTests() =
         insert Dime
         Assert.AreEqual("5", vm.Display)
 
+    [<TestMethod>]
+    member this.``Purchase without enough credit displays price``()=
+        let product = vm.Purchase(Cola)
+        Assert.AreEqual("PRICE $1.00", vm.Display);
+        Assert.AreEqual("INSERT COINS", vm.Display);
+        insert Nickel
+        let product = vm.Purchase(Candy)
+        Assert.AreEqual("PRICE $0.65", vm.Display);
+        Assert.AreEqual("10", vm.Display);
+       
+
+
 
