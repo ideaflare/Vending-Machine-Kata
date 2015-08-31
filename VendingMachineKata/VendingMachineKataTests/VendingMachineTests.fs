@@ -37,3 +37,12 @@ type VendingMachineTests() =
         let returnedCoins = vm.TakeCoinReturn
         Assert.AreEqual([Penny;Penny;], returnedCoins)
 
+    [<TestMethod>]
+    member this.``Purchase thanks customer``()=
+        insert Quarter
+        insert Quarter
+        let product = vm.Purchase(Chips)
+        Assert.AreEqual(Some(Chips), product)
+        Assert.AreEqual("THANK YOU", vm.Display)
+
+
