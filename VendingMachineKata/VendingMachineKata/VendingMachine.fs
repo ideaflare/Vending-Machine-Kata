@@ -4,7 +4,7 @@ type Coin = Penny | Dime | Nickel | Quarter
 
 type VendingMachine() = 
     
-    let mutable amount = 0
+    let mutable credit = 0
 
     let coinValue coin = 
         match coin with
@@ -17,10 +17,10 @@ type VendingMachine() =
         match coin with
         | Penny -> false
         | _ -> 
-            amount <- amount + (coinValue coin)
+            credit <- credit + (coinValue coin)
             true
         
     member this.Display
         with get() =
-            if amount > 0 then (string amount)
+            if credit > 0 then (string credit)
             else "INSERT COIN"
