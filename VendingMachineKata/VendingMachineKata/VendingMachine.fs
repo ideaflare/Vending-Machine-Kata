@@ -17,6 +17,18 @@ type VendingMachine(colas, chips, candies) =
         let inventory = [Cola, colas; Chips, chips; Candy, candies]
         System.Linq.Enumerable.ToDictionary(inventory, fst, snd)
 
+    let purchase product =
+        let price = productValue product
+        if credit >= price then
+                state <- Thanks
+                returnedCoins <- returnedCoins @ getCoins (credit - price)
+                credit <- 0
+                Some(product)
+            else 
+                state <- Price
+                priceDisplay <- sprintf "PRICE $%d.%02d" (price / 100) (price % 100)
+                None
+
     new() = VendingMachine(10,10,10)
 
     member this.Insert coin =
@@ -31,22 +43,10 @@ type VendingMachine(colas, chips, candies) =
             true
             
     member this.Purchase product =
-        if stock.[product] < 1 
-            then 
+        if stock.[product] < 1 then 
                 state <- SoldOut
                 None
-        else
-            let price = productValue product
-            if credit >= price
-                then
-                    state <- Thanks
-                    returnedCoins <- returnedCoins @ getCoins (credit - price)
-                    credit <- 0
-                    Some(product)
-                else 
-                    state <- Price
-                    priceDisplay <- sprintf "PRICE $%d.%02d" (price / 100) (price % 100)
-                    None
+        else purchase product
 
     member this.Display
         with get() =
