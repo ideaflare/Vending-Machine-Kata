@@ -23,6 +23,7 @@ type VendingMachine(colas, chips, candies) =
                 state <- Thanks
                 returnedCoins <- returnedCoins @ getCoins (credit - price)
                 credit <- 0
+                stock.[product] <- stock.[product] - 1
                 Some(product)
             else 
                 state <- Price
