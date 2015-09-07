@@ -87,22 +87,29 @@ type VendingMachineTests() =
 
     [<TestMethod>]
     member this.``Sold out stock notifies customer``()=
-        vm <- new VendingMachine(colas=1,chips=0,candies=0)
+        vm <- new VendingMachine(colas=0,chips=0,candies=0)
         insert Quarter
         insert Quarter
         insert Quarter
         insert Quarter
         let product = vm.Purchase(Cola)
-        Assert.AreEqual(Some(Cola), product)
+        Assert.AreEqual("SOLD OUT", vm.Display)
+
+    [<TestMethod>]
+    member this.``Purchase item reduces stock``()=
+        vm <- new VendingMachine(colas=0,chips=1,candies=1)
+        insert Quarter
+        insert Quarter
+        let product = vm.Purchase(Chips)
+        Assert.AreEqual(Some(Chips), product)
         Assert.AreNotEqual("SOLD OUT", vm.Display)
-        let product = vm.Purchase(Cola)
+        let product = vm.Purchase(Chips)
         Assert.AreEqual(None, product)
         Assert.AreEqual("SOLD OUT", vm.Display)
         Assert.AreEqual("INSERT COIN", vm.Display)
         insert Nickel
-        let product = vm.Purchase(Cola)
-        Assert.AreEqual("SOLD OUT", vm.Display)
         Assert.AreEqual("10", vm.Display)
+
 
        
 
